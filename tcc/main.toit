@@ -18,8 +18,18 @@ retry_interval ::= 20
 retries ::= 2
 volt_resolution/float ::= 3.3
 _ADC_Bit_Resolution ::= 12
-A ::= 34.668
-B ::= -3.369
+A_CO ::= 605.18
+B_CO ::= -3.937
+A_Alcohol ::= 77.255
+B_Alcohol ::= -3.18
+A_CO2 ::= 110.47
+B_CO2 ::= -2.862
+A_Toluen ::= 44.947
+B_Toluen ::= -3.445
+A_NH4 ::= 102.2
+B_NH4 ::= -2.473
+A_Aceton ::= 34.668
+B_Aceton ::= -3.369
 _R0/float :=?
 _sensor_volt/float := 0.0
 _RL/float := 10.0
@@ -60,7 +70,7 @@ calibrate ratioInCleanAir/float ->float:
 
   return R0
 
-readSensor -> float:
+readSensor _A/float _B/float -> float:
   PPM/float :=?
   ratio/float := 0.0
   RS_Calc/float := 0.0
@@ -71,7 +81,7 @@ readSensor -> float:
   RS_Calc = RS_Calc-_RL
 
   ratio = RS_Calc / _R0
-  PPM = A * (math.pow ratio B)
+  PPM = _A * (math.pow ratio _B)
   return PPM
 
 
@@ -96,7 +106,13 @@ main:
     // led.set 1
     //print "Valor do gassssss é: "
     _sensor_volt = getVoltage MQ // checar pra ver se essa função é valida de transformação para ppm
-    print readSensor 
+    CO :=  readSensor A_CO B_CO
+    Alcohol :=  readSensor A_Alcohol B_Alcohol
+    CO2 :=  readSensor A_CO2 B_CO2
+    Toluen :=  readSensor A_Toluen B_Toluen
+    NH4 :=  readSensor A_NH4 B_NH4
+    Aceton :=  readSensor A_Aceton B_Aceton
+    print "Acetona \t\t NH4 \t\t\t Toluen \t\t\t CO2 \t\t\t Alcohol \t\t CO \n$(%.5f Aceton) ppm \t $(%.5f NH4) ppm \t $(%.5f Toluen) ppm \t $(%.5f CO2) ppm \t $(%.5f Alcohol) ppm \t $(%.5f CO) ppm"
     //gas.close
 
     sleep --ms=500
