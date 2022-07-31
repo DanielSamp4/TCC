@@ -11,7 +11,6 @@ How to wire the LED:
 import gpio
 import math
 import gpio.adc show Adc
-
 LED ::= 2
 MQ135 ::= 34
 retry_interval ::= 20
